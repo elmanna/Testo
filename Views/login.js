@@ -106,7 +106,7 @@ export class Login extends Component{
                 {/* <TextInput onChangeText={(value) => updateUsername(value)} placeholder="Username" style={layout.TextInput}></TextInput>
                 <TextInput onChangeText={(value) => updatePassword(value)} secureTextEntry={true} placeholder="Password"  style={layout.TextInput}></TextInput> */}
                 <View style={layout.Button}>
-                    <Button onPress={sendRequest} title="LOGIN">
+                    <Button onPress={sendRequest()} title="LOGIN">
                     </Button>
                 </View>
             </SafeAreaView>
