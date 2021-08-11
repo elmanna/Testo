@@ -13,13 +13,15 @@ export class Dashboard extends Component{
     }
 
     async fetchData(){
-        let response = await fetch("https://jasondz.pythonanywhere.com/api/dashboard");
         //console.log(`got the response ${response} `);
-        let json = await response.json();
-        const str = await JSON.stringify(json);
-        console.log(`str -> ${str}`);
-        const parsed = JSON.parse(str);
-        this.setState({"msg": parsed["msg"]});
+        await fetch("https://jasondz.pythonanywhere.com/api/dashboard")
+        .then(response => response.json())
+        .then(json => JSON.stringify(json))
+        .then(str => JSON.parse(str))
+        .then(parsed => this.setState({"msg": parsed["msg"]}))
+        .catch((error)=>{
+            alert(`${error.message}`)
+        })
     }
     
     render(){
