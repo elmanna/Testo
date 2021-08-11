@@ -18,53 +18,56 @@ export class Login extends Component{
         }
     }
 
+    getCredentials = async () => {
+        let isResponse = false;
+        // await fetch("http://127.0.0.1:8000/api/login")
+        await fetch("https://jasondz.pythonanywhere.com/api/login")
+        .then(response => response.json())
+        .then(json => JSON.stringify(json))
+        .then(str => JSON.parse(str))
+        .then(parsed => this.setState({"serverusr": parsed["User"], "serverpswd": parsed["Password"]}))
+        .then(() => {isResponse=true})
+        .catch(error =>{
+            alert(`${error.message}`)
+        })
+        return isResponse;
+    }
+    
     render(){
-        const getCredentials = async () =>{
-            let response = await fetch("https://jasondz.pythonanywhere.com/api/login");
-            //let response = await fetch("http://0.0.0.0:8000/api/login/");
-            let json = await response.json();
-            const str = await JSON.stringify(json);
-            console.log(str);
-            const parsed = JSON.parse(str);
-            this.setState({"serverusr": parsed["User"], "serverpswd": parsed["Password"]});
-        }
-
-        // const getCredentials = async () =>{
-        //     useEffect(() => {
-        //         fetch('login')
-        //           .then((response) => response.json())
-        //           .then((json) => console.log(json))
-        //           .catch((error) => console.error(error))
-        //       });
-        // }
-
-
-        // const getCredentials = async () =>{
-        //     let res;
-        //     fetch('api/login')
-        //         .then(response => response.json())
-        //         .then(response => console.log(response))
-        //         .catch(error => console.log(error));
-        // }
-
         const authenticate = () =>{
             if(this.state.username == this.state.serverusr && this.state.password == this.state.serverpswd){
                 this.props.updateView("dashboard");
                 // console.log("switch to dashboard!");
             }else{
-                console.log("wronge credentials!!");
+                alert("Wrong credentials! (authenticate)")
             }
         }
 
-        const sendRequest = () => {
+        const sendRequest = async () => {
+            console.log("pressed!");
             let username = this.state.username;
             let password = this.state.password;
             
             if(username !== "" && password !== ""){
-                getCredentials();
-                // console.log(this.state.username);
-                // console.log(this.state.password);
-                setTimeout(()=> {authenticate()}, 3000);
+                // const isResponse = this.getCredentials();
+                // if(isResponse){
+                //     authenticate();
+                // }
+                this.getCredentials()
+                .then((isResponse) => {
+                    if(isResponse){
+                        alert(`Response: ${isResponse}`)
+                        authenticate();
+                    }else{
+                        alert(`Response: ${isResponse}`)
+                    }
+                })
+                    // .then();
+                    //setTimeout(()=> {authenticate()}, 2000);
+                    // console.log(this.state.username);
+                    // console.log(this.state.password);
+            }else{
+                alert("Please fill all the fields!")
             }
         }
 
@@ -106,8 +109,7 @@ export class Login extends Component{
                 {/* <TextInput onChangeText={(value) => updateUsername(value)} placeholder="Username" style={layout.TextInput}></TextInput>
                 <TextInput onChangeText={(value) => updatePassword(value)} secureTextEntry={true} placeholder="Password"  style={layout.TextInput}></TextInput> */}
                 <View style={layout.Button}>
-                    <Button onPress={sendRequest()} title="LOGIN">
-                    </Button>
+                    <Button onPress={sendRequest} title="LOGIN" />
                 </View>
             </SafeAreaView>
         );
